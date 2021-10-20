@@ -243,7 +243,7 @@ We now have our application built in a container and stored in our container reg
       
       script:
         - az login --service-principal -u $AZSPLogin -p $AZSPPassword --tenant $AZSPTenant
-        - az group create –location westus –name $AZResourceGroup
+        - az group create --location westus --resource-group $AZResourceGroup
         - az deployment group create --name GitLabPipeline --resource-group $AZResourceGroup --template-file ./ARM-Templates/main.bicep --mode incremental -o json --parameters siteName=$AppServiceName dockerRegistryHost='https://registry.gitlab.com' username=$CI_REGISTRY_USER password=$CI_REGISTRY_PASSWORD
  
 
