@@ -32,6 +32,8 @@ In this tutorial we will be going over at a high level the features within GitLa
 
 ## 1 Track you work in project boards
 
+Overview: Here we are going to go over the high level features that can enable you to sprint plan.  We wont go through every single feature but by the end we hope this will help you get an idea of how this could work for your group.
+
 GitLab/Agile Lingo Map - Below is a lingo map to translate agile terminology to the respective GitLab feature so that you can leverage their tools for sprint planning.
 
 |Agile Terminology     | GitLab feature                    |
@@ -89,6 +91,8 @@ You just finished the first section, hopefully this gave you a taste of how you 
 
 ## 2.	Centralize code with GitLab Repos
 
+Overview: Here we plan to walk through checking out and checkin in your code with GitLab.  If you have experience with Github this should feel very familiar as they behave very similarily.
+
 2.1	Go to your project, on the left hand side, select “Repository”
 
 2.2	Select the “Clone” button on the top right and choose your preference for cloning the repository.  We will continue here by copying the https url.
@@ -101,7 +105,7 @@ We just finished the second section, at this point we should have a project with
 
 ## 3.	Continuous Integration
 
-Now that we have code checked in, lets start working on our pipeline.  We will focus on building our app first(Continuous Integration).
+Overview: Now that we have code checked in, lets start working on our pipeline.  We will first focus on building our app first(Continuous Integration).  Later we will build upon the pipeline that we start with here.
 
 3.1	Go to CI/CD section then “Editor”.  This is your pipeline editor.
 
@@ -131,6 +135,8 @@ build-job:       # This job runs in the build stage, which runs first.
 At the end of this section you should now be able to build your code that you checked in through the pipeline.  Lets extend the pipeline in the next few sections.
 
 ## 4.	Build and push docker image to container registry
+
+Overview: Building upon the pipeline we are going to take it a step further and build a docker container then store it in the GitLab container registry.
 
 4.1	Return back to the pipeline editor.  Go to CI/CD section then “Editor”. 
 
@@ -170,7 +176,7 @@ To add some additional context for our pipeline we copied in.  You can see that 
 
 ## 5.	Infrastructure as code
 
-We now have our application built in a container and stored in our container registry.  Now lets move on to infrastructure as code so we can create our infrastructure that we will deploy to.
+Overview: We now have our application built in a container and stored in our container registry.  Now lets move on to infrastructure as code so we can create our infrastructure in Azure that we will deploy to.
 
 5.1	First we need an Azure SP for our pipeline automation.
 
@@ -253,7 +259,7 @@ Congrats!  After your job has finished you should have a new resource group alon
 
 ## 6.	Continuous Delivery
 
-We are now going to work on deploying the container to the app service.  You will need a deployment token first so we will get that created then use the token in our pipeline.
+Overview: Now that we have the infrastructure built out, we are now going to work on deploying the container to the app service.  You will need a deployment token first so we will get that created then use the token in our new deploy job.
 
 6.1	First we need to create a deploy token.  In your project go to “Settings” followed by “Repository”
 
@@ -300,6 +306,8 @@ Your code should now be deployed to the app service.  You can validate this by l
 
 ## 7.	Branching and policies
 
+Overview: During this time you have been able to commit directly to the main branch which is not a good best practice.  Here we will go over how you can lock that down to make your pipelines more stable.
+
 7.1	Here we are going to protect the branches so you cant check in directly.
 
 7.2	In your project go to “Settings” then “Repository”
@@ -311,6 +319,8 @@ Your code should now be deployed to the app service.  You can validate this by l
 Now that you have set the protection, you should not be able to checkin directly to the main branch.  This is a great way to protect your main branch and ensure only merge requests are the route to bring in new code.
 
 ## 8.	Security
+
+Overview: We now have a CI/CD pipeline, but we should take it a step further.  Lets go over how easy it is to integrate security scanning into your pipeline.
 
 8.1	Return back to the pipeline editor.  Go to CI/CD section then “Editor”. 
 
@@ -341,6 +351,8 @@ Now that you have set the protection, you should not be able to checkin directly
 
 ## 9.	How to Create Kubernetes Cluster and Install Prometheus (Optional going forward as this requires Google Cloud or Amazon Cloud account)
 
+Overview: So far everything we have built was done with manual scripting and creating the pipeline by hand.  Lets take another aproach by leveraging GitLabs integration with Google Kubernetes Engine and see how quick we can spin up our infrastructure and pipeline.
+
 9.1	Go to Infrastructure/Kubernetes
 
 9.2	Click on “Connect cluster with certificate”
@@ -367,6 +379,8 @@ helm install prometheus prometheus-community/prometheus -n gitlab-managed-apps -
 
 ## 10.	Auto DevOps
 
+Overview: Creating the kubernetes cluster and configuring with Prometheus should have been relatively painless.  But wait there is more!  Now we can take it up another notch by having a pipeline automagically created without a pipeline file.
+
 10.1	Install Ingress
 ```
 helm repo add stable https://charts.helm.sh/stable
@@ -386,7 +400,17 @@ kubectl get service ingress-nginx-ingress-controller -n gitlab-managed-apps
 
 10.4	Check the box to “Default to Auto DevOps pipeline”, you can leave the deployment strategy as default.  Then save changes.
 
-10.5	You can now create a new pipeline with all auto devops features enabled.
+10.5	Checkin and replace the code from the zip file called AutoDevOps-Application.zip
+  
+10.6  Your pipeline should automatically run after the checkin.  It should contain all of the features that come with AutoDevOps
+  
+## 11. Cleanup
+  
+Your GitLab account should revert to free once the trial is over.  If you prefer you can also delete your account.  You will need to delete the group first by going to the settings within the group.  Then by going to your account icon on the top right, then select "Account" followed by "Delete Account"
+  
+You will also need to delete the resource group in Azure.
+  
+
 
 
 
