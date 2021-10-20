@@ -265,16 +265,16 @@ We are now going to work on deploying the container to the app service.  You wil
 
 6.5	Update the following in your pipeline:
 
-    6.5.1 Update your stages to what you see below:
-    ```
+  6.5.1 Update your stages to what you see below:
+    
     stages:   
       - buildAzureEnvironment      
       - build
       - dockerBuild
       - deploy
-    ```
-    6.5.2	Add the additional deployment job to the end of the file.  
-    ```
+    
+  6.5.2	Add the additional deployment job to the end of the file.  
+    
     deploy-job:      # This job runs in the deploy stage.
       stage: deploy 
       environment:
@@ -292,7 +292,7 @@ We are now going to work on deploying the container to the app service.  You wil
         - az webapp config container set --docker-custom-image-name https://registry.gitlab.com/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME/razorpagestestsample:$CI_COMMIT_SHA --docker-registry-server-password $CI_DEPLOY_PASSWORD --docker-registry-server-url https://registry.gitlab.com --docker-registry-server-user $CI_DEPLOY_USER --name $AppServiceName --resource-group $AZResourceGroup
         - az webapp restart --name $AppServiceName --resource-group $AZResourceGroup
         - echo "Application successfully deployed."Start a new pipeline to run your build and deployment.
-    ```
+    
 
 6.5.3 You can now create a new pipeline and run your deployment once the build has completed.
 
