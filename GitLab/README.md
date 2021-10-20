@@ -1,5 +1,8 @@
 # Compete Hack Hours Demo: GitLab
 
+## Overview
+In this tutorial we will be going over at a high level the features within GitLab.  You will use their planning tools to see how it maps to sprint planning, followed by checking in a sample application and building a pipeline by hand to build and deploy your application to Azure App Service.  Lastly we will see some of the integrated features built into GitLab such as creating a Kubernetes cluster and leveraging their Auto DevOps capabilities. 
+
 ## Prerequisites:
 -	Level 200 understanding of DevOps as a concept and GitHub
 -	Free GitLab Account. The free account credits will cover this exercise, assuming you clean-up.
@@ -29,7 +32,7 @@
 
 ## 1 Track you work in project boards
 
-GitLab/Agile Lingo Map
+GitLab/Agile Lingo Map - Below is a lingo map to translate agile terminology to the respective GitLab feature so that you can leverage their tools for sprint planning.
 
 |Agile Terminology     | GitLab feature                    |
 |----------------------|-----------------------------------|
@@ -82,6 +85,8 @@ GitLab/Agile Lingo Map
 
 1.19	Return to epics and go to roadmap.  You should now see your roadmaps based on epics populating now.
 
+You just finished the first section, hopefully this gave you a taste of how you could use GitLab to plan your sprints.
+
 ## 2.	Centralize code with GitLab Repos
 
 2.1	Go to your project, on the left hand side, select “Repository”
@@ -92,7 +97,11 @@ GitLab/Agile Lingo Map
 
 2.4	Checkin the code/IAC templates from the Application.zip
 
+We just finished the second section, at this point we should have a project with the application source code checked in.
+
 ## 3.	Continuous Integration
+
+Now that we have code checked in, lets start working on our pipeline.  We will focus on building our app first(Continuous Integration).
 
 3.1	Go to CI/CD section then “Editor”.  This is your pipeline editor.
 
@@ -118,6 +127,7 @@ build-job:       # This job runs in the build stage, which runs first.
     - dotnet test --no-build --verbosity normal ./Application/tests/RazorPagesTestSample.Tests/RazorPagesTestSample.Tests.csproj
 ```
 3.3	You can now run the pipeline and this will build your application only when make a change to the application directory.
+
 
 ## 4.	Build and push docker image to container registry
 
@@ -153,35 +163,39 @@ docker-build-job:
 
 4.3	You can now run another pipelike which will build your code and push your container
 
+Awesome, as a checkpoint you should now have a pipeline that is building the application, creating a container, and storing it in the container registry.  If everything looks good lets continue on this journey.
+
 ## 5.	Infrastructure as code
+
+We now have our application built in a container and stored in our container registry.  Now lets move on to infrastructure as code so we can create our infrastructure that we will deploy to.
 
 5.1	First we need an Azure SP for our pipeline automation.
 
-    5.1.1	In Azure Portal go to “App Registrations”
+  5.1.1	In Azure Portal go to “App Registrations”
 
-    5.1.2	Select “New Registration” on the top left.
+  5.1.2	Select “New Registration” on the top left.
 
-    5.1.3	Enter a name for your app registration and click “Register”
+  5.1.3	Enter a name for your app registration and click “Register”
 
-    5.1.4	After the app registration is created, on the left hand side go to “Certificates & Secrets”
+  5.1.4	After the app registration is created, on the left hand side go to “Certificates & Secrets”
 
-    5.1.5	Click on “New Client Secret”.  You can set the secret date range for how long its valid.  We recommend the minimum needed, so it can just be today.
+  5.1.5	Click on “New Client Secret”.  You can set the secret date range for how long its valid.  We recommend the minimum needed, so it can just be today.
 
-    5.1.6	Save your secret ID and value as it will be needed shortly.  You will also need your Directory ID/Tenant info which is located on your app registration overview.
+  5.1.6	Save your secret ID and value as it will be needed shortly.  You will also need your Directory ID/Tenant info which is located on your app registration overview.
 
 5.2	We now need to grant contributor access to the App Registration
 
-    5.2.1	Go to your subscription you plan on creating the resource group in.
+  5.2.1	Go to your subscription you plan on creating the resource group in.
 
-    5.2.2	On the left hand side, select “Access Control (IAM)”
+  5.2.2	On the left hand side, select “Access Control (IAM)”
 
-    5.2.3	On the main screen select “Add” followed by “Add Role Assignments”
+  5.2.3	On the main screen select “Add” followed by “Add Role Assignments”
 
-    5.2.4	Select “Contributor” then “Next”
+  5.2.4	Select “Contributor” then “Next”
 
-    5.2.5	Select “Select members” and enter the name of your App Registration and select the name.  Then press “Select”
+  5.2.5	Select “Select members” and enter the name of your App Registration and select the name.  Then press “Select”
 
-    5.2.6	Select “Review + assign” at the bottom of the screen.
+  5.2.6	Select “Review + assign” at the bottom of the screen.
 
 5.3	We will now add the SP to the variables in GitLab.  While in the project go to “Settings” then “CI/CD”
 
@@ -191,21 +205,21 @@ docker-build-job:
 
 5.6	Enter the following for the keys and enter the respective values.  If they are sensitive, ensure the “Mask Variable” checkbox is checked.  Once completed, select “Add Variable”
 
-    5.6.1	AZSPLogin – Application (Client) ID
+  5.6.1	AZSPLogin – Application (Client) ID
 
-    5.6.2	AZSPPassword – Secret Value
+  5.6.2	AZSPPassword – Secret Value
 
-    5.6.3	AZSPTenant – Directory ID/Tenant
+  5.6.3	AZSPTenant – Directory ID/Tenant
 
-    5.6.4	AZResourceGroup – Name of resource group you want to create/use
+  5.6.4	AZResourceGroup – Name of resource group you want to create/use
 
-    5.6.5	AppServiceName – Name of your app service
+  5.6.5	AppServiceName – Name of your app service
 
 5.7	We are now going to override the auto devops pipeline.  Go to CI/CD section then “Editor”.  This is the pipeline editor.  Select “Create new CI/CD pipeline”
 
 5.8 We will now update your template with the following:
 
-    5.8.1	Replace the stages section with the following:
+  5.8.1	Replace the stages section with the following:
 
     
     stages:   
@@ -215,7 +229,7 @@ docker-build-job:
   
 
 
-    5.8.2	Add the following Job at the end.  
+  5.8.2	Add the following Job at the end.  
 
 
   
