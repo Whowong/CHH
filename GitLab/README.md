@@ -126,8 +126,9 @@ build-job:       # This job runs in the build stage, which runs first.
     - dotnet build --no-restore ./Application/src/RazorPagesTestSample/RazorPagesTestSample.csproj
     - dotnet test --no-build --verbosity normal ./Application/tests/RazorPagesTestSample.Tests/RazorPagesTestSample.Tests.csproj
 ```
-3.3	You can now run the pipeline and this will build your application only when make a change to the application directory.
+3.3	You can now run the pipeline and this will build your application only when make a change to the application directory.  If you have not validated your account from step 0, you will now be prompted to enter your credit card information for validation.  This is GitLabs way of ensuring there is no abuse from crypto mining.
 
+At the end of this section you should now be able to build your code that you checked in through the pipeline.  Lets extend the pipeline in the next few sections.
 
 ## 4.	Build and push docker image to container registry
 
@@ -163,7 +164,9 @@ docker-build-job:
 
 4.3	You can now run another pipelike which will build your code and push your container
 
-Awesome, as a checkpoint you should now have a pipeline that is building the application, creating a container, and storing it in the container registry.  If everything looks good lets continue on this journey.
+Awesome, as a checkpoint you should now have a pipeline that is building the application, creating a container, and storing it in the container registry.  If everything looks good lets continue on this journey.  
+
+To add some additional context for our pipeline we copied in.  You can see that we leveraged multiple variables so that it could be copied and pasted easily.  The registry URL for example needed your project group/namespace and project name which will be unique for all of you.  Using these pre-defined variables you can not worry about these URLs if you were to share this job as we did here.  For a full list of pre-defined variables you can use, please go here: https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
 
 ## 5.	Infrastructure as code
 
@@ -246,11 +249,15 @@ We now have our application built in a container and stored in our container reg
 
 5.9	This stage is only set to run manually.  You can create a new pipeline then trigger this stage.
 
+Congrats!  After your job has finished you should have a new resource group along with an app service inside of it.  We are going to continue expanding on your pipeline next by deploying your code to the app service.
+
 ## 6.	Continuous Delivery
+
+We are now going to work on deploying the container to the app service.  You will need a deployment token first so we will get that created then use the token in our pipeline.
 
 6.1	First we need to create a deploy token.  In your project go to “Settings” followed by “Repository”
 
-6.2	Expand the Deploy Tokens section and enter “gitlab-deploy-token” for the name and check the “Read_registry” scope checkbox.
+6.2	Expand the Deploy Tokens section and enter “gitlab-deploy-token” for the name and check the “Read_registry” scope checkbox.  Please note the name MUST be “gitlab-deploy-token” as it is referenced by the pipeline provided to you in the later steps.
 
 6.3	Click “Create deploy token”
 
@@ -289,6 +296,7 @@ We now have our application built in a container and stored in our container reg
 
 6.5.3 You can now create a new pipeline and run your deployment once the build has completed.
 
+Your code should now be deployed to the app service.  You can validate this by looking for the URL in the app service inside Azure Portal.  Now that you created your deploy token and deployment pipeline I wanted to add some context.  There are some pre-defined variables such as $CI_DEPLOY_USER and $CI_DEPLOY_PASSWORD similar to the $CI_PROJECT_NAME we used before.  These are built in to GitLab that you can leverage.  When we created the deploy token we had to use “gitlab-deploy-token” as the name.  GitLab will automatically use the values in that token when you reference it with $CI_DEPLOY_USER and $CI_DEPLOY_PASSWORD.
 
 ## 7.	Branching and policies
 
@@ -300,6 +308,7 @@ We now have our application built in a container and stored in our container reg
 
 7.4	In the branch section the main branch is already protected but we want to enhance this.  Change “Allowed to push” from “Maintainers” to “No one”
 
+Now that you have set the protection, you should not be able to checkin directly to the main branch.  This is a great way to protect your main branch and ensure only merge requests are the route to bring in new code.
 
 ## 8.	Security
 
@@ -329,6 +338,7 @@ We now have our application built in a container and stored in our container reg
 
 8.3	Run your pipeline again, you should see the security scans in your pipeline going forward.
 
+
 ## 9.	How to Create Kubernetes Cluster and Install Prometheus (Optional going forward as this requires Google Cloud or Amazon Cloud account)
 
 9.1	Go to Infrastructure/Kubernetes
@@ -353,6 +363,7 @@ helm install prometheus prometheus-community/prometheus -n gitlab-managed-apps -
 9.7	Once installed, return to GitLab, and return to your Kubernetes cluster, under the integrations tab, select the “Enable Prometheus Integration” checkbox and save.
 
 9.8	Metrics should begin to populate after a few minutes.
+
 
 ## 10.	Auto DevOps
 
