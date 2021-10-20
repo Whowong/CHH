@@ -376,11 +376,11 @@ kubectl get service ingress-nginx-ingress-controller -n gitlab-managed-apps
 ```
 10.2	Configure base domain 
 
-    10.2.1	Get the IP address by running the following a few mins after ingress service is installed.
-    ```
+  10.2.1	Get the IP address by running the following a few mins after ingress service is installed.
+    
     kubectl get service ingress-nginx-ingress-controller -n gitlab-managed-apps -ojson | jq -r '.status.loadBalancer.ingress[].ip'
-    ```
-    10.2.2	Return to GitLab cluster information and enter “<IP address from above>.nip.io”
+    
+  10.2.2	Return to GitLab cluster information and enter “<IP address from above>.nip.io”
 
 10.3	Go back to your project homepage and there will be a button to “Enable Auto DevOps”
 
