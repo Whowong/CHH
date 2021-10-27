@@ -164,7 +164,7 @@ docker-build-job:
   - docker:dind 
   script:
     - echo "Building Docker Container"
-    - docker login registry.gitlab.com/chhorg -u $CI_REGISTRY_USER  -p $CI_REGISTRY_PASSWORD 
+    - docker login registry.gitlab.com/$CI_PROJECT_NAMESPACE -u $CI_REGISTRY_USER  -p $CI_REGISTRY_PASSWORD 
     - docker build -t registry.gitlab.com/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME/razorpagestestsample -t registry.gitlab.com/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME/razorpagestestsample:$CI_COMMIT_SHA ./Application/src/RazorPagesTestSample
     - docker push registry.gitlab.com/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME/razorpagestestsample
 ```
