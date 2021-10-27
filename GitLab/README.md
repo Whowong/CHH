@@ -30,7 +30,7 @@ In this tutorial we will be going over at a high level the features within GitLa
 9.	Your pipelines across all projects should be allowed to run now and you are ready for the demo.
 
 
-## 1 Track you work in project boards
+## 1 Track your work in project boards
 
 Overview: Here we are going to go over the high level features that can enable you to sprint plan.  We wont go through every single feature but by the end we hope this will help you get an idea of how this could work for your group.
 
@@ -48,6 +48,7 @@ GitLab/Agile Lingo Map - Below is a lingo map to translate agile terminology to 
 |Agile board	       |  Issue boards                     |
 
 
+Please ensure you are using your own project that was created when you setup your trial.  Do not use the "Learn GitLab - Ultimate Trial" project as it is pre-populated with other content that may conflict what what we do here.
 
 1.1	 Go to “menu” at the top of the screen, hover over “Groups” then select “Your Groups”
 
@@ -130,7 +131,7 @@ build-job:       # This job runs in the build stage, which runs first.
     - dotnet build --no-restore ./Application/src/RazorPagesTestSample/RazorPagesTestSample.csproj
     - dotnet test --no-build --verbosity normal ./Application/tests/RazorPagesTestSample.Tests/RazorPagesTestSample.Tests.csproj
 ```
-3.3	You can now run the pipeline and this will build your application only when make a change to the application directory.  If you have not validated your account from step 0, you will now be prompted to enter your credit card information for validation.  This is GitLabs way of ensuring there is no abuse from crypto mining.
+3.3	You can now run the pipeline and this will build your application only when you make a change to the application directory.  If you have not validated your account from step 0, you will now be prompted to enter your credit card information for validation.  This is GitLabs way of ensuring there is no abuse from crypto mining.
 
 At the end of this section you should now be able to build your code that you checked in through the pipeline.  Lets extend the pipeline in the next few sections.
 
@@ -142,7 +143,7 @@ Overview: Building upon the pipeline we are going to take it a step further and 
 
 4.2	Update your template with the following:
 
-4.2.1	Add an additional stage, you stages section should look like this:
+4.2.1	Add an additional stage, your stages section should look like this:
 ```
 stages:   
   - build
@@ -168,7 +169,7 @@ docker-build-job:
     - docker push registry.gitlab.com/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME/razorpagestestsample
 ```
 
-4.3	You can now run another pipelike which will build your code and push your container
+4.3	You can now run another pipeline which will build your code and push your container.  To verify this, after the pipeline completes, look for your container under "Packages & Registries" then "Container Registry".
 
 Awesome, as a checkpoint you should now have a pipeline that is building the application, creating a container, and storing it in the container registry.  If everything looks good lets continue on this journey.  
 
@@ -190,7 +191,7 @@ Overview: We now have our application built in a container and stored in our con
 
   5.1.5	Click on “New Client Secret”.  You can set the secret date range for how long its valid.  We recommend the minimum needed, so it can just be today.
 
-  5.1.6	Save your secret ID and value as it will be needed shortly.  You will also need your Directory ID/Tenant info which is located on your app registration overview.
+  5.1.6 Save the secret value as it will be needed shortly. You will also need your Application (client) ID and Directory (Tenant) ID which is located on your app registration overview.
 
 5.2	We now need to grant contributor access to the App Registration
 
@@ -224,7 +225,7 @@ Overview: We now have our application built in a container and stored in our con
 
   5.6.5	AppServiceName – Name of your app service
 
-5.7	We are now going to override the auto devops pipeline.  Go to CI/CD section then “Editor”.  This is the pipeline editor.  Select “Create new CI/CD pipeline”
+5.7	We are now going to return to the pipeline editor. Go to CI/CD section then “Editor”.  
 
 5.8 We will now update your template with the following:
 
@@ -253,7 +254,7 @@ Overview: We now have our application built in a container and stored in our con
         - az deployment group create --name GitLabPipeline --resource-group $AZResourceGroup --template-file ./ARM-Templates/main.bicep --mode incremental -o json --parameters siteName=$AppServiceName dockerRegistryHost='https://registry.gitlab.com' username=$CI_REGISTRY_USER password=$CI_REGISTRY_PASSWORD
  
 
-5.9	This stage is only set to run manually.  You can create a new pipeline then trigger this stage.
+5.9	This stage is only set to run manually.  You can create a new pipeline then trigger this stage.  To do this, go to CI/CD then "Pipelines".  You will see a pipeline with the stage pending which you can trigger manually.
 
 Congrats!  After your job has finished you should have a new resource group along with an app service inside of it.  We are going to continue expanding on your pipeline next by deploying your code to the app service.
 
@@ -300,32 +301,19 @@ Overview: Now that we have the infrastructure built out, we are now going to wor
         - echo "Application successfully deployed."Start a new pipeline to run your build and deployment.
     
 
-6.5.3 You can now create a new pipeline and run your deployment once the build has completed.
+6.5.3 You can now create a new pipeline and run your deployment once the build has completed.  As a reminder, you will need to manually trigger the deploy job as it is set as manual step. 
 
 Your code should now be deployed to the app service.  You can validate this by looking for the URL in the app service inside Azure Portal.  Now that you created your deploy token and deployment pipeline I wanted to add some context.  There are some pre-defined variables such as $CI_DEPLOY_USER and $CI_DEPLOY_PASSWORD similar to the $CI_PROJECT_NAME we used before.  These are built in to GitLab that you can leverage.  When we created the deploy token we had to use “gitlab-deploy-token” as the name.  GitLab will automatically use the values in that token when you reference it with $CI_DEPLOY_USER and $CI_DEPLOY_PASSWORD.
 
-## 7.	Branching and policies
 
-Overview: During this time you have been able to commit directly to the main branch which is not a good best practice.  Here we will go over how you can lock that down to make your pipelines more stable.
-
-7.1	Here we are going to protect the branches so you cant check in directly.
-
-7.2	In your project go to “Settings” then “Repository”
-
-7.3	Expand the “Protected Branches” section
-
-7.4	In the branch section the main branch is already protected but we want to enhance this.  Change “Allowed to push” from “Maintainers” to “No one”
-
-Now that you have set the protection, you should not be able to checkin directly to the main branch.  This is a great way to protect your main branch and ensure only merge requests are the route to bring in new code.
-
-## 8.	Security
+## 7.	Security
 
 Overview: We now have a CI/CD pipeline, but we should take it a step further.  Lets go over how easy it is to integrate security scanning into your pipeline.
 
-8.1	Return back to the pipeline editor.  Go to CI/CD section then “Editor”. 
+7.1	Return back to the pipeline editor.  Go to CI/CD section then “Editor”. 
 
-8.2 We will be updating your pipeline templates with the following:
-  8.2.1	Replace the stages with the following:
+7.2 We will be updating your pipeline templates with the following:
+  7.2.1	Replace the stages with the following:
   ```
   stages:   
     - buildAzureEnvironment       
@@ -335,7 +323,7 @@ Overview: We now have a CI/CD pipeline, but we should take it a step further.  L
     - deploy
     - dast
   ```
-  8.2.2	Add in the following templates into your pipeline file.
+  7.2.2	Add in the following templates into your pipeline file.
   ```
   include:
     - template: Security/Dependency-Scanning.gitlab-ci.yml
@@ -346,7 +334,22 @@ Overview: We now have a CI/CD pipeline, but we should take it a step further.  L
     - template: Security/Container-Scanning.gitlab-ci.yml
   ```
 
-8.3	Run your pipeline again, you should see the security scans in your pipeline going forward.
+7.3	Run your pipeline again, you should see the security scans in your pipeline going forward.
+
+
+## 8.	Branching and policies
+
+Overview: During this time you have been able to commit directly to the main branch which is not a good best practice.  Here we will go over how you can lock that down to make your pipelines more stable.
+
+8.1	Here we are going to protect the branches so you cant check in directly.
+
+8.2	In your project go to “Settings” then “Repository”
+
+8.3	Expand the “Protected Branches” section
+
+8.4	In the branch section the main branch is already protected but we want to enhance this.  Change “Allowed to push” from “Maintainers” to “No one”
+
+Now that you have set the protection, you should not be able to checkin directly to the main branch.  This is a great way to protect your main branch and ensure only merge requests are the route to bring in new code.
 
 
 ## 9.	How to Create Kubernetes Cluster and Install Prometheus (Optional going forward as this requires Google Cloud or Amazon Cloud account)
