@@ -30,87 +30,28 @@ In this tutorial we will be going over at a high level the features within GitLa
 9.	Your pipelines across all projects should be allowed to run now and you are ready for the demo.
 
 
-## 1 Track your work in project boards
 
-Overview: Here we are going to go over the high level features that can enable you to sprint plan.  We wont go through every single feature but by the end we hope this will help you get an idea of how this could work for your group.
-
-GitLab/Agile Lingo Map - Below is a lingo map to translate agile terminology to the respective GitLab feature so that you can leverage their tools for sprint planning.
-
-|Agile Terminology     | GitLab feature                    |
-|----------------------|-----------------------------------|
-|User story            |	Issues                         |
-|Task	               |  Task lists                       |
-|Epic	               |     Epics                         |
-|Points and estimation |	Weights                        |
-|Product backlog       |Issue lists and prioritized labels |
-|Sprint/iteration	   |  Milestones                       |
-|Burndown chart	       |  Burndown charts                  |
-|Agile board	       |  Issue boards                     |
-
-
-Please ensure you are using your own project that was created when you setup your trial.  Do not use the "Learn GitLab - Ultimate Trial" project as it is pre-populated with other content that may conflict what what we do here.
-
-1.1	 Go to “menu” at the top of the screen, hover over “Groups” then select “Your Groups”
-
-1.2	 Select your group that you created when you signed up.  This must be used as it has the ultimate license.
-
-1.3	 On the left hand side select “Epic”
-
-1.4	 Select “New Epic” on the top right hand side.
-
-1.5	 Enter a name and description of your Epic.  Then select “Create Epic”
-
-1.6  Go back to you project that you created when you signed up.  You can return by going to the “Menu” then “Project” followed by “Your Projects”
-
-1.7	 Now that you are back in your project, hover over “Issues” and select “Milestones”
-
-1.8	 Select “New Milestone” which will create us a new sprint.
-
-1.9	 Enter a name, start, and end date then click “Create Milestone”
-
-1.10 In this screen you will see your sprint along with any tickets and the burndown/up chart.  
-
-1.11	On the left click on “List”
-
-1.12	On the top right click on “New Issue”
-
-1.13	Fill in the title, description
-
-1.14	Select the epic that you created from the dropdown.
-
-1.15	Select the milestone we just created from the dropdown
-
-1.16	Enter a number under weight.  This represents story points.
-
-1.17	Click “Create Issue”
-
-1.18	If you return to the milestone you can now see the issue tied to the sprint along with the total points in the sprint, burndown charts populating.
-
-1.19	Return to epics and go to roadmap.  You should now see your roadmaps based on epics populating now.
-
-You just finished the first section, hopefully this gave you a taste of how you could use GitLab to plan your sprints.
-
-## 2.	Centralize code with GitLab Repos
+## 1.	Centralize code with GitLab Repos
 
 Overview: Here we plan to walk through checking out and checkin in your code with GitLab.  If you have experience with Github this should feel very familiar as they behave very similarily.
 
-2.1	Go to your project, on the left hand side, select “Repository”
+1.1	Go to your project, on the left hand side, select “Repository”
 
-2.2	Select the “Clone” button on the top right and choose your preference for cloning the repository.  We will continue here by copying the https url.
+1.2	Select the “Clone” button on the top right and choose your preference for cloning the repository.  We will continue here by copying the https url.
 
-2.3	Clone the repository locally
+1.3	Clone the repository locally
 
-2.4	Checkin the code/IAC templates from the Application.zip
+1.4	Checkin the code/IAC templates from the Application.zip
 
 We just finished the second section, at this point we should have a project with the application source code checked in.
 
-## 3.	Continuous Integration
+## 2.	Continuous Integration
 
 Overview: Now that we have code checked in, lets start working on our pipeline.  We will first focus on building our app first(Continuous Integration).  Later we will build upon the pipeline that we start with here.
 
-3.1	Go to CI/CD section then “Editor”.  This is your pipeline editor.
+2.1	Go to CI/CD section then “Editor”.  This is your pipeline editor.
 
-3.2	Replace your template with the following:
+2.2	Replace your template with the following:
 
 ```
 image: mcr.microsoft.com/dotnet/core/sdk:latest
@@ -131,26 +72,26 @@ build-job:       # This job runs in the build stage, which runs first.
     - dotnet build --no-restore ./Application/src/RazorPagesTestSample/RazorPagesTestSample.csproj
     - dotnet test --no-build --verbosity normal ./Application/tests/RazorPagesTestSample.Tests/RazorPagesTestSample.Tests.csproj
 ```
-3.3	You can now run the pipeline and this will build your application only when you make a change to the application directory.  If you have not validated your account from step 0, you will now be prompted to enter your credit card information for validation.  This is GitLabs way of ensuring there is no abuse from crypto mining.
+2.3	You can now run the pipeline and this will build your application only when you make a change to the application directory.  If you have not validated your account from step 0, you will now be prompted to enter your credit card information for validation.  This is GitLabs way of ensuring there is no abuse from crypto mining.
 
 At the end of this section you should now be able to build your code that you checked in through the pipeline.  Lets extend the pipeline in the next few sections.
 
-## 4.	Build and push docker image to container registry
+## 3.	Build and push docker image to container registry
 
 Overview: Building upon the pipeline we are going to take it a step further and build a docker container then store it in the GitLab container registry.
 
-4.1	Return back to the pipeline editor.  Go to CI/CD section then “Editor”. 
+3.1	Return back to the pipeline editor.  Go to CI/CD section then “Editor”. 
 
-4.2	Update your template with the following:
+3.2	Update your template with the following:
 
-4.2.1	Add an additional stage, your stages section should look like this:
+3.2.1	Add an additional stage, your stages section should look like this:
 ```
 stages:   
   - build
   - dockerBuild
 ```
 
-4.2.2	Copy and add this job to the end of your file.  
+3.2.2	Copy and add this job to the end of your file.  
 ```
 docker-build-job:   
   stage: dockerBuild   
@@ -169,67 +110,67 @@ docker-build-job:
     - docker push registry.gitlab.com/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME/razorpagestestsample
 ```
 
-4.3	You can now run another pipeline which will build your code and push your container.  To verify this, after the pipeline completes, look for your container under "Packages & Registries" then "Container Registry".
+3.3	You can now run another pipeline which will build your code and push your container.  To verify this, after the pipeline completes, look for your container under "Packages & Registries" then "Container Registry".
 
 Awesome, as a checkpoint you should now have a pipeline that is building the application, creating a container, and storing it in the container registry.  If everything looks good lets continue on this journey.  
 
 To add some additional context for our pipeline we copied in.  You can see that we leveraged multiple variables so that it could be copied and pasted easily.  The registry URL for example needed your project group/namespace and project name which will be unique for all of you.  Using these pre-defined variables you can not worry about these URLs if you were to share this job as we did here.  For a full list of pre-defined variables you can use, please go here: https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
 
-## 5.	Infrastructure as code
+## 4.	Infrastructure as code
 
 Overview: We now have our application built in a container and stored in our container registry.  Now lets move on to infrastructure as code so we can create our infrastructure in Azure that we will deploy to.
 
-5.1	First we need an Azure SP for our pipeline automation.
+4.1	First we need an Azure SP for our pipeline automation.
 
-  5.1.1	In Azure Portal go to “App Registrations”
+  4.1.1	In Azure Portal go to “App Registrations”
 
-  5.1.2	Select “New Registration” on the top left.
+  4.1.2	Select “New Registration” on the top left.
 
-  5.1.3	Enter a name for your app registration and click “Register”
+  4.1.3	Enter a name for your app registration and click “Register”
 
-  5.1.4	After the app registration is created, on the left hand side go to “Certificates & Secrets”
+  4.1.4	After the app registration is created, on the left hand side go to “Certificates & Secrets”
 
-  5.1.5	Click on “New Client Secret”.  You can set the secret date range for how long its valid.  We recommend the minimum needed, so it can just be today.
+  4.1.5	Click on “New Client Secret”.  You can set the secret date range for how long its valid.  We recommend the minimum needed, so it can just be today.
 
-  5.1.6 Save the secret value as it will be needed shortly. You will also need your Application (client) ID and Directory (Tenant) ID which is located on your app registration overview.
+  4.1.6 Save the secret value as it will be needed shortly. You will also need your Application (client) ID and Directory (Tenant) ID which is located on your app registration overview.
 
-5.2	We now need to grant contributor access to the App Registration
+4.2	We now need to grant contributor access to the App Registration
 
-  5.2.1	Go to your subscription you plan on creating the resource group in.
+  4.2.1	Go to your subscription you plan on creating the resource group in.
 
-  5.2.2	On the left hand side, select “Access Control (IAM)”
+  4.2.2	On the left hand side, select “Access Control (IAM)”
 
-  5.2.3	On the main screen select “Add” followed by “Add Role Assignments”
+  4.2.3	On the main screen select “Add” followed by “Add Role Assignments”
 
-  5.2.4	Select “Contributor” then “Next”
+  4.2.4	Select “Contributor” then “Next”
 
-  5.2.5	Select “Select members” and enter the name of your App Registration and select the name.  Then press “Select”
+  4.2.5	Select “Select members” and enter the name of your App Registration and select the name.  Then press “Select”
 
-  5.2.6	Select “Review + assign” at the bottom of the screen.
+  4.2.6	Select “Review + assign” at the bottom of the screen.
 
-5.3	We will now add the SP to the variables in GitLab.  While in the project go to “Settings” then “CI/CD”
+4.3	We will now add the SP to the variables in GitLab.  While in the project go to “Settings” then “CI/CD”
 
-5.4	Go to the section called “Variables” then expand by clicking the “Expand” button on the right hand side.
+4.4	Go to the section called “Variables” then expand by clicking the “Expand” button on the right hand side.
 
-5.5	Select “Add Variable” at the bottom.
+4.5	Select “Add Variable” at the bottom.
 
-5.6	Enter the following for the keys and enter the respective values.  If they are sensitive, ensure the “Mask Variable” checkbox is checked.  Once completed, select “Add Variable”
+4.6	Enter the following for the keys and enter the respective values.  If they are sensitive, ensure the “Mask Variable” checkbox is checked.  Once completed, select “Add Variable”
 
-  5.6.1	AZSPLogin – Application (Client) ID
+  4.6.1	AZSPLogin – Application (Client) ID
 
-  5.6.2	AZSPPassword – Secret Value
+  4.6.2	AZSPPassword – Secret Value
 
-  5.6.3	AZSPTenant – Directory ID/Tenant
+  4.6.3	AZSPTenant – Directory ID/Tenant
 
-  5.6.4	AZResourceGroup – Name of resource group you want to create/use
+  4.6.4	AZResourceGroup – Name of resource group you want to create/use
 
-  5.6.5	AppServiceName – Name of your app service
+  4.6.5	AppServiceName – Name of your app service
 
-5.7	We are now going to return to the pipeline editor. Go to CI/CD section then “Editor”.  
+4.7	We are now going to return to the pipeline editor. Go to CI/CD section then “Editor”.  
 
-5.8 We will now update your template with the following:
+4.8 We will now update your template with the following:
 
-  5.8.1	Replace the stages section with the following:
+  4.8.1	Replace the stages section with the following:
 
     
     stages:   
@@ -239,7 +180,7 @@ Overview: We now have our application built in a container and stored in our con
   
 
 
-  5.8.2	Add the following Job at the end.  
+  4.8.2	Add the following Job at the end.  
 
 
   
@@ -254,7 +195,7 @@ Overview: We now have our application built in a container and stored in our con
         - az deployment group create --name GitLabPipeline --resource-group $AZResourceGroup --template-file ./ARM-Templates/main.bicep --mode incremental -o json --parameters siteName=$AppServiceName dockerRegistryHost='https://registry.gitlab.com' username=$CI_REGISTRY_USER password=$CI_REGISTRY_PASSWORD
  
 
-5.9	This stage is only set to run manually.  You can create a new pipeline then trigger this stage.  To do this, go to CI/CD then "Pipelines".  You will see a pipeline with the stage pending which you can trigger manually.
+4.9	This stage is only set to run manually.  You can create a new pipeline then trigger this stage.  To do this, go to CI/CD then "Pipelines".  You will see a pipeline with the stage pending which you can trigger manually.
 
 Congrats!  After your job has finished you should have a new resource group along with an app service inside of it.  We are going to continue expanding on your pipeline next by deploying your code to the app service.
 
@@ -262,17 +203,17 @@ Congrats!  After your job has finished you should have a new resource group alon
 
 Overview: Now that we have the infrastructure built out, we are now going to work on deploying the container to the app service.  You will need a deployment token first so we will get that created then use the token in our new deploy job.
 
-6.1	First we need to create a deploy token.  In your project go to “Settings” followed by “Repository”
+5.1	First we need to create a deploy token.  In your project go to “Settings” followed by “Repository”
 
-6.2	Expand the Deploy Tokens section and enter “gitlab-deploy-token” for the name and check the “Read_registry” scope checkbox.  Please note the name MUST be “gitlab-deploy-token” as it is referenced by the pipeline provided to you in the later steps.
+5.2	Expand the Deploy Tokens section and enter “gitlab-deploy-token” for the name and check the “Read_registry” scope checkbox.  Please note the name MUST be “gitlab-deploy-token” as it is referenced by the pipeline provided to you in the later steps.
 
-6.3	Click “Create deploy token”
+5.3	Click “Create deploy token”
 
-6.4	Return to the pipeline editor.  Go to CI/CD section then “Editor”.  
+5.4	Return to the pipeline editor.  Go to CI/CD section then “Editor”.  
 
-6.5	Update the following in your pipeline:
+5.5	Update the following in your pipeline:
 
-  6.5.1 Update your stages to what you see below:
+  5.5.1 Update your stages to what you see below:
     
     stages:   
       - buildAzureEnvironment      
@@ -280,7 +221,7 @@ Overview: Now that we have the infrastructure built out, we are now going to wor
       - dockerBuild
       - deploy
     
-  6.5.2	Add the additional deployment job to the end of the file.  
+  5.5.2	Add the additional deployment job to the end of the file.  
     
     deploy-job:      # This job runs in the deploy stage.
       stage: deploy 
@@ -301,19 +242,19 @@ Overview: Now that we have the infrastructure built out, we are now going to wor
         - echo "Application successfully deployed."Start a new pipeline to run your build and deployment.
     
 
-6.5.3 You can now create a new pipeline and run your deployment once the build has completed.  As a reminder, you will need to manually trigger the deploy job as it is set as manual step. 
+5.5.3 You can now create a new pipeline and run your deployment once the build has completed.  As a reminder, you will need to manually trigger the deploy job as it is set as manual step. 
 
 Your code should now be deployed to the app service.  You can validate this by looking for the URL in the app service inside Azure Portal.  Now that you created your deploy token and deployment pipeline I wanted to add some context.  There are some pre-defined variables such as $CI_DEPLOY_USER and $CI_DEPLOY_PASSWORD similar to the $CI_PROJECT_NAME we used before.  These are built in to GitLab that you can leverage.  When we created the deploy token we had to use “gitlab-deploy-token” as the name.  GitLab will automatically use the values in that token when you reference it with $CI_DEPLOY_USER and $CI_DEPLOY_PASSWORD.
 
 
-## 7.	Security
+## 6.	Security
 
 Overview: We now have a CI/CD pipeline, but we should take it a step further.  Lets go over how easy it is to integrate security scanning into your pipeline.
 
-7.1	Return back to the pipeline editor.  Go to CI/CD section then “Editor”. 
+6.1	Return back to the pipeline editor.  Go to CI/CD section then “Editor”. 
 
-7.2 We will be updating your pipeline templates with the following:
-  7.2.1	Replace the stages with the following:
+6.2 We will be updating your pipeline templates with the following:
+  6.2.1	Replace the stages with the following:
   ```
   stages:   
     - buildAzureEnvironment       
@@ -323,7 +264,7 @@ Overview: We now have a CI/CD pipeline, but we should take it a step further.  L
     - deploy
     - dast
   ```
-  7.2.2	Add in the following templates into your pipeline file.
+  6.2.2	Add in the following templates into your pipeline file.
   ```
   include:
     - template: Security/Dependency-Scanning.gitlab-ci.yml
@@ -334,23 +275,83 @@ Overview: We now have a CI/CD pipeline, but we should take it a step further.  L
     - template: Security/Container-Scanning.gitlab-ci.yml
   ```
 
-7.3	Run your pipeline again, you should see the security scans in your pipeline going forward.
+6.3	Run your pipeline again, you should see the security scans in your pipeline going forward.
 
 
-## 8.	Branching and policies
+## 7.	Branching and policies
 
 Overview: During this time you have been able to commit directly to the main branch which is not a good best practice.  Here we will go over how you can lock that down to make your pipelines more stable.
 
-8.1	Here we are going to protect the branches so you cant check in directly.
+7.1	Here we are going to protect the branches so you cant check in directly.
 
-8.2	In your project go to “Settings” then “Repository”
+7.2	In your project go to “Settings” then “Repository”
 
-8.3	Expand the “Protected Branches” section
+7.3	Expand the “Protected Branches” section
 
-8.4	In the branch section the main branch is already protected but we want to enhance this.  Change “Allowed to push” from “Maintainers” to “No one”
+7.4	In the branch section the main branch is already protected but we want to enhance this.  Change “Allowed to push” from “Maintainers” to “No one”
 
 Now that you have set the protection, you should not be able to checkin directly to the main branch.  This is a great way to protect your main branch and ensure only merge requests are the route to bring in new code.
 
+
+## 8. Track your work in project boards (Optional)
+
+Overview: Here we are going to go over the high level features that can enable you to sprint plan.  We wont go through every single feature but by the end we hope this will help you get an idea of how this could work for your group.
+
+GitLab/Agile Lingo Map - Below is a lingo map to translate agile terminology to the respective GitLab feature so that you can leverage their tools for sprint planning.
+
+|Agile Terminology     | GitLab feature                    |
+|----------------------|-----------------------------------|
+|User story            |	Issues                         |
+|Task	               |  Task lists                       |
+|Epic	               |     Epics                         |
+|Points and estimation |	Weights                        |
+|Product backlog       |Issue lists and prioritized labels |
+|Sprint/iteration	   |  Milestones                       |
+|Burndown chart	       |  Burndown charts                  |
+|Agile board	       |  Issue boards                     |
+
+
+Please ensure you are using your own project that was created when you setup your trial.  Do not use the "Learn GitLab - Ultimate Trial" project as it is pre-populated with other content that may conflict what what we do here.
+
+8.1	 Go to “menu” at the top of the screen, hover over “Groups” then select “Your Groups”
+
+8.2	 Select your group that you created when you signed up.  This must be used as it has the ultimate license.
+
+8.3	 On the left hand side select “Epic”
+
+8.4	 Select “New Epic” on the top right hand side.
+
+8.5	 Enter a name and description of your Epic.  Then select “Create Epic”
+
+8.6  Go back to you project that you created when you signed up.  You can return by going to the “Menu” then “Project” followed by “Your Projects”
+
+8.7	 Now that you are back in your project, hover over “Issues” and select “Milestones”
+
+8.8	 Select “New Milestone” which will create us a new sprint.
+
+8.9	 Enter a name, start, and end date then click “Create Milestone”
+
+8.10 In this screen you will see your sprint along with any tickets and the burndown/up chart.  
+
+8.11	On the left click on “List”
+
+8.12	On the top right click on “New Issue”
+
+8.13	Fill in the title, description
+
+8.14	Select the epic that you created from the dropdown.
+
+8.15	Select the milestone we just created from the dropdown
+
+8.16	Enter a number under weight.  This represents story points.
+
+8.17	Click “Create Issue”
+
+8.18	If you return to the milestone you can now see the issue tied to the sprint along with the total points in the sprint, burndown charts populating.
+
+8.19	Return to epics and go to roadmap.  You should now see your roadmaps based on epics populating now.
+
+You just finished the first section, hopefully this gave you a taste of how you could use GitLab to plan your sprints.
 
 ## 9.	How to Create Kubernetes Cluster and Install Prometheus (Optional going forward as this requires Google Cloud or Amazon Cloud account)
 
@@ -366,7 +367,7 @@ Overview: So far everything we have built was done with manual scripting and cre
 
 9.5	Select “Create Kubernetes Cluster”
 
-9.6	Go to Google cloud console and run the following lines
+9.6	Go to Google cloud shell and run the following lines.  You can reach the cloud shell by clicking on the ">_" icon near the top right of your screen.
 
 ```
 kubectl create ns gitlab-managed-apps
@@ -384,7 +385,7 @@ helm install prometheus prometheus-community/prometheus -n gitlab-managed-apps -
 
 Overview: Creating the kubernetes cluster and configuring with Prometheus should have been relatively painless.  But wait there is more!  Now we can take it up another notch by having a pipeline automagically created without a pipeline file.
 
-10.1	Install Ingress
+10.1	Install Ingress for base domain
 ```
 helm repo add stable https://charts.helm.sh/stable
 helm repo update
@@ -397,9 +398,9 @@ kubectl get service ingress-nginx-ingress-controller -n gitlab-managed-apps
     
     kubectl get service ingress-nginx-ingress-controller -n gitlab-managed-apps -ojson | jq -r '.status.loadBalancer.ingress[].ip'
     
-  10.2.2	Return to GitLab cluster information and enter “<IP address from above>.nip.io”
+  10.2.2	Return to GitLab cluster information and enter “<IP address from above>.nip.io” in the "Base Domain" section.
 
-10.3	Go back to your project homepage and there will be a button to “Enable Auto DevOps”
+10.3	Go back to your project homepage and there will be a button to “Enable Auto DevOps”, select that button.
 
 10.4	Check the box to “Default to Auto DevOps pipeline”, you can leave the deployment strategy as default.  Then save changes.
 
