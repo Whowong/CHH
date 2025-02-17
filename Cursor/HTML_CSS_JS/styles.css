@@ -1,0 +1,54 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
+
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(4, 100px);
+    grid-gap: 10px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 100px); /* Adjust the number of columns and size as needed */
+    grid-gap: 10px; /* Space between boxes */
+    justify-content: center; /* Center the grid horizontally */
+    align-items: center; /* Center the grid vertically */
+}
+
+.box {
+    width: 100px; /* Box width */
+    height: 100px; /* Box height */
+    border: 2px solid black; /* Box border */
+    display: flex;
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    background-color: #f0f0f0; /* Light background color for visibility */
+}
+
+.mole-container {
+    width: 100px; /* Match the mole size */
+    height: 100px; /* Match the mole size */
+    border: 2px solid black; /* Border around the mole */
+    border-radius: 50%; /* Match the mole's border-radius for a circular border */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mole {
+    background-color: brown;
+    border-radius: 50%;
+    width: 90px; /* Slightly less to fit inside the container */
+    height: 90px; /* Slightly less to fit inside the container */
+    opacity: 0; /* Moles are initially not visible */
+    transition: opacity 0.3s; /* Smooth transition for appearing and disappearing */
+}
+
+.mole.up {
+    opacity: 1; /* Moles are fully visible when they "pop up" */
+}
