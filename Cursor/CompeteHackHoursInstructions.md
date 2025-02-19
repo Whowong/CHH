@@ -1,5 +1,5 @@
 # Cursor AI Demo Guide
-##Pre-Req
+## Pre-Req
 1. Install Cursor - https://www.cursor.com/ - Free version is sufficient
 
 ## 1. Opening the Project
